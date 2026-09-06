@@ -67,6 +67,10 @@ public class Car {
 		return id;
 	}
 
+	public void setCurrentUserId(Integer currentUserId) {
+		this.currentUserId = currentUserId;
+	}
+
 	public Integer getCurrentUserId() {
 		return currentUserId;
 	}
