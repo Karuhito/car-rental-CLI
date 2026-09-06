@@ -67,7 +67,7 @@ public class Car {
 		return id;
 	}
 
-	public int getCurrentUserId() {
+	public Integer getCurrentUserId() {
 		return currentUserId;
 	}
 	
