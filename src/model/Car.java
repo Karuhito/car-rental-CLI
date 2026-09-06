@@ -35,7 +35,7 @@ public class Car {
 		return maker;
 	}
 
-	public void setMaker(String maker) {
+	public void setMaker(CarMaker maker) {
 		this.maker = maker;
 	}
 
