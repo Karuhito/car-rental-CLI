@@ -8,7 +8,7 @@ public class Car {
 	private CarMaker maker;
 	private CarStatus status;
 	private int cumulativeMileage;
-	private int currentUserId;
+	private Integer currentUserId;
 	private CarTransmission transmission;
 	
 	public Car() {
