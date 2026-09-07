@@ -1,0 +1,6 @@
+id,vehicleModel,color,maker,status,cumulativeMileage,currentUserId,transmission
+1,カローラ,white,TOYOTA,AVAILABLE,15000,,AT
+2,フィット,red,HONDA,RENTED,32000,1,AT
+3,スカイライン,black,NISSAN,MAINTENANCE,58000,,MT
+4,インプレッサ,blue,SUBARU,AVAILABLE,8000,,MT
+5,スペーシア,silver,OTHER,RENTED,21000,2,AT
