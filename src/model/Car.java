@@ -12,7 +12,7 @@ public class Car {
 	private CarTransmission transmission;
 	
 	public Car() {
-		
+
 	}
 
 	public String getVehicleModel() {
