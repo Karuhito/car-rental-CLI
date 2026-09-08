@@ -30,9 +30,9 @@ public class UserService {
 				String[] data = line.split(",", -1);
 				// 各フィールドの変数を用意する
 				// id,name,age,isATLimited
-				int id = Integer.valueOf(data[0]);
+				int id = Integer.parseInt(data[0]);
 				String name = data[1];
-				int age = Integer.valueOf(data[2]);
+				int age = Integer.parseInt(data[2]);
 				boolean isATLimited = Boolean.parseBoolean(data[3]);
 				
 				users.add(new User(id, name, age, isATLimited));
