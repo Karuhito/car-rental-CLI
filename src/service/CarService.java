@@ -1,3 +1,4 @@
+
 package service;
 
 import java.io.BufferedReader;
@@ -31,26 +32,40 @@ public class CarService{
 	 * @return
 	 */
 	public List<Car> listCars(List<Car> cars) {
+		
 		return cars;
 	}
 	
 	/**
-	 * 車のstatusで絞り込んだ一覧を返す。
-	 * @param cars
-	 * @param status
-	 * @return
+	 * 状態で車を絞り込む。リスト内ループを行い、getStatusrとstatusが一致した場合filterdCarsにその車を追加する
+	 * @param cars 車一覧
+	 * @param status 絞り込みたい車の状態
+	 * @return 絞り込んだ状態の車の一覧を返す。0件の場合は空のListを返す。
 	 */
 	public List<Car> filterByStatus(List<Car> cars, CarStatus status){
-		return null;
+		List<Car> filteredCars = new ArrayList<Car>();
+		for (Car car : cars ) {
+			if (car.getStatus() == status) {
+				filteredCars.add(car);
+			}
+		}
+		return filteredCars;
 	}
 	
 	/**
-	 * メーカーで車を絞り込んだ一覧を返す
-	 * @param cars
-	 * @param maker
+	 * メーカーで車を絞り込むメソッド。リスト内ループを行い、getMakerとmakerが一致した場合filterdCarsにその車を追加する
+	 * @param cars 車の一覧
+	 * @param maker 絞り込みたい車のメーカー
+	 * @return 絞り込んだメーカーの車の一覧を返す。0件の場合は空のListを返す
 	 */
 	public List<Car> filterByMaker(List<Car> cars, CarMaker maker) {
-		return null;
+		List<Car> filteredCars = new ArrayList<Car>();
+		for (Car car : cars ) {
+			if (car.getMaker() == maker) {
+				filteredCars.add(car);
+			}
+		}
+		return filteredCars;
 	}
 	
 	/**
@@ -140,5 +155,23 @@ public class CarService{
 			throw new IOException("CSVへの書き込み保存に失敗しました", e);
 		}
 	}
+	
+	/**
+	 * 車のIDでその車があるかを調べるメソッド
+	 * @param cars 車の一覧
+	 * @param id 調べたい車のID
+	 * @return 存在するIDの場合はその車のオブジェクトを返す、存在しない場合はnullで返す。
+	 */
+	public Car findCarById(List<Car> cars, int id) {
+		for (Car car : cars) {
+			if (car.getId() == id) {
+				return car;
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	
 }
