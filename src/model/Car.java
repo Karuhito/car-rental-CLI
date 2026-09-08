@@ -11,8 +11,18 @@ public class Car {
 	private Integer currentUserId;
 	private CarTransmission transmission;
 	
-	public Car() {
+	
 
+	public Car(int id, String vehicleModel, String color, CarMaker maker, CarStatus status, int cumulativeMileage,
+			Integer currentUserId, CarTransmission transmission) {
+		this.id = id;
+		this.vehicleModel = vehicleModel;
+		this.color = color;
+		this.maker = maker;
+		this.status = status;
+		this.cumulativeMileage = cumulativeMileage;
+		this.currentUserId = currentUserId;
+		this.transmission = transmission;
 	}
 
 	public String getVehicleModel() {
