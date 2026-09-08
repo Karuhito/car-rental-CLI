@@ -71,11 +71,16 @@ public class CarService{
 		
 	}
 	
+	/**
+	 * cars.csvを読み込んで、List<Car>を作って返すメソッド
+	 * @return cars.csvにあるCarのデータをリストにして返す
+	 * @throws IOException
+	 */
 	public List<Car> loadFromCsv() throws IOException {
 		// Carの配列を定義
 		List<Car> cars = new ArrayList<Car>();
 		try (BufferedReader reader = new BufferedReader(new FileReader(CARS_CSV))) {
-			// 1行目はcsvのフィールドのコメントなので読み捨てる
+			// 1行目はcsvの構造の説明なので読み捨てる
 			String header = reader.readLine();
 			
 			// whileでcsvファイルの終わりまで1行ずつ読み込む
@@ -103,6 +108,11 @@ public class CarService{
 		return cars;
 	}
 	
+	/**
+	 * List<Car>を引数に受け取りcars.csvに書き込み処理を行うメソッド
+	 * @param cars Carの入ったリスト
+	 * @throws IOException ファイルの処理で問題が起きた場合throwする
+	 */
 	public void saveToCsv(List<Car> cars) throws IOException {
 		// BufferedWriterでcars.csvにcarsを保存させる
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(CARS_CSV))) {
@@ -111,6 +121,7 @@ public class CarService{
 			writer.newLine();
 			
 			// forでCarごとにフィールドを取り出し、文字列に変換、csvに書き込む
+			// id | vehicleModel | color | maker | status | cumulativeMileage | currentUserId | transmission
 			for (Car car : cars) {
 				String id = String.valueOf(car.getId());
 				String vehicleModel = car.getVehicleModel();
@@ -118,6 +129,7 @@ public class CarService{
 				String maker = car.getMaker().name();
 				String status = car.getStatus().name();
 				String cumulativeMileage = String.valueOf(car.getCumulativeMileage());
+				// nullの時は空文字でcsvに保存する
 				String currentUserId = (car.getCurrentUserId() == null) ? "" : String.valueOf(car.getCurrentUserId());
 				String transmission = car.getTransmission().name();
 				

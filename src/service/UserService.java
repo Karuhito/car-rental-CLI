@@ -29,7 +29,6 @@ public class UserService {
 				// カンマ区切りでそのユーザーのフィールドの配列を作る
 				String[] data = line.split(",", -1);
 				// 各フィールドの変数を用意する
-				// id,name,age,isATLimited
 				int id = Integer.parseInt(data[0]);
 				String name = data[1];
 				int age = Integer.parseInt(data[2]);
@@ -56,7 +55,7 @@ public class UserService {
 			writer.newLine();
 			
 			// forでUserごとにフィールドを取り出し、文字列に変換、csvに書き込む
-			// id,name,age,isATLimited
+			// id | name | age | isATLimited
 			for (User user : users) {
 				String id = String.valueOf(user.getId());
 				String name = user.getName();
