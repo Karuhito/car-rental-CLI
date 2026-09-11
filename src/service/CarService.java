@@ -29,10 +29,9 @@ public class CarService{
 	/**
 	 * 車の一覧を返すメソッド
 	 * @param cars
-	 * @return
+	 * @return 車の一覧を返す。
 	 */
 	public List<Car> listCars(List<Car> cars) {
-		
 		return cars;
 	}
 	
@@ -68,22 +67,49 @@ public class CarService{
 		return filteredCars;
 	}
 	
+
 	/**
-	 * 車の情報を更新するメソッド
-	 * @param cars
-	 * @param carId
+	 * 車の情報を更新するメソッド。
+	 * 現段階では走行距離の更新のみを行う。
+	 * @param cars 車の一覧
+	 * @param carId 更新したい車のID
+	 * @param mileage 更新後の走行距離
+	 * @return　carIdが存在する車のIDで更新に成功した場合はtrue、存在せず、更新に失敗する場合はfalse
 	 */
-	public void updateCar(List<Car> cars, int carId) {
-		
+	public boolean updateCar(List<Car> cars, int carId, int mileage) {
+		Car car = findCarById(cars, carId);
+		if (car != null) {
+			car.setCumulativeMileage(mileage);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 車の状態を見て、貸出中の場合はfalse、貸出中でない場合はtrueを返して、車の情報を消しても良いか判断するメソッド
+	 * @param car 消したい車
+	 * @return CarStatus.RENTEDの場合はfalse、RENTEDではない場合はtrue
+	 */
+	public boolean canDeleteCar(Car car) {
+		if (car.getStatus() == CarStatus.RENTED) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**
 	 * 車の情報を削除するメソッド
-	 * @param cars
-	 * @param carId
+	 * @param cars 車の一覧
+	 * @param carId 削除したい車のID
+	 * @return carIdがcarsに存在する車のIDかつStatusが貸出中ではない場合は削除してtrue、carIdが存在しないまたはStatusが貸出中の場合はfalse
 	 */
-	public void deleteCar(List<Car> cars, int carId) {
-		
+	public boolean deleteCar(List<Car> cars, int carId) {
+		Car car = findCarById(cars, carId);
+		if (car != null && canDeleteCar(car)) {
+			cars.remove(car);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -157,7 +183,7 @@ public class CarService{
 	}
 	
 	/**
-	 * 車のIDでその車があるかを調べるメソッド
+	 * 車のIDでその車の情報を取得するメソッド
 	 * @param cars 車の一覧
 	 * @param id 調べたい車のID
 	 * @return 存在するIDの場合はその車のオブジェクトを返す、存在しない場合はnullで返す。
