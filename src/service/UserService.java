@@ -8,10 +8,76 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Car;
 import model.User;
 
 public class UserService {
 	private static final String USERS_CSV = "data/users.csv";
+	
+	/**
+	 *  ユーザー一覧からIDでユーザーの情報を取り出すメソッド
+	 * @param users ユーザーデータ一覧
+	 * @param userId 取得したいユーザーのID
+	 * @return 存在するユーザーのIDだったらそのユーザーを返す。存在しない場合はnullを返す。
+	 */
+	public User findUserById(List<User> users, int userId) {
+		for (User user : users) {
+			if (user.getId() == userId) {
+				return user;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 新規ユーザーをユーザーデータ一覧に追加するメソッド
+	 * @param users ユーザーデータ一覧
+	 * @param newUser 新規登録したユーザー
+	 */
+	public void addUser(List<User> users, User newUser) {
+		users.add(newUser);
+	}
+	
+	/**
+	 * ユーザー一覧を返すメソッド
+	 * @param users ユーザーデータ一覧
+	 * @return ユーザーデータ一覧をそのまま返す
+	 */
+	public List<User> listUsers(List<User> users) {
+		return users;
+	}
+	
+	/**
+	 * 削除したいユーザーのIDが車一覧の現在借りているユーザーのIDに含まれていないか確認するメソッド
+	 * @param user 削除したいユーザー
+	 * @param cars 車一覧 
+	 * @return 車を借りているユーザーが存在しているかつ削除したいユーザーと車を借りているユーザーのIDが一致する場合はfalse、そうでない場合はtrueを返す
+	 */
+	public boolean canDeleteUser(User user, List<Car> cars) {
+		for (Car car : cars) {
+			// 車を借りているユーザーが存在しているかつ削除したいユーザーと車を借りているユーザーのIDが一致する場合
+			if ( car.getCurrentUserId() != null && user.getId() == car.getCurrentUserId()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * ユーザー情報をcanDeleteUserで削除できるか確認し削除するメソッド
+	 * @param users ユーザー一覧
+	 * @param cars 車一覧 canDeleteUserの引数で使う
+	 * @param userId 削除したいユーザーのID
+	 * @return 削除に成功の場合はtrue、 失敗する場合はfalseを返す
+	 */
+	public boolean deleteUser (List<User> users, List<Car> cars, int userId) {
+		User user = findUserById(users, userId);
+		if (user != null && canDeleteUser(user, cars)) {
+			users.remove(user);
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * users.csvを読み込んで、List<User>を作って返すメソッド
