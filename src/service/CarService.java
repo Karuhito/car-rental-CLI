@@ -1,3 +1,4 @@
+
 package service;
 
 import java.io.BufferedReader;
@@ -28,47 +29,87 @@ public class CarService{
 	/**
 	 * 車の一覧を返すメソッド
 	 * @param cars
-	 * @return
+	 * @return 車の一覧を返す。
 	 */
 	public List<Car> listCars(List<Car> cars) {
 		return cars;
 	}
 	
 	/**
-	 * 車のstatusで絞り込んだ一覧を返す。
-	 * @param cars
-	 * @param status
-	 * @return
+	 * 状態で車を絞り込む。リスト内ループを行い、getStatusrとstatusが一致した場合filterdCarsにその車を追加する
+	 * @param cars 車一覧
+	 * @param status 絞り込みたい車の状態
+	 * @return 絞り込んだ状態の車の一覧を返す。0件の場合は空のListを返す。
 	 */
 	public List<Car> filterByStatus(List<Car> cars, CarStatus status){
-		return null;
+		List<Car> filteredCars = new ArrayList<Car>();
+		for (Car car : cars ) {
+			if (car.getStatus() == status) {
+				filteredCars.add(car);
+			}
+		}
+		return filteredCars;
 	}
 	
 	/**
-	 * メーカーで車を絞り込んだ一覧を返す
-	 * @param cars
-	 * @param maker
+	 * メーカーで車を絞り込むメソッド。リスト内ループを行い、getMakerとmakerが一致した場合filterdCarsにその車を追加する
+	 * @param cars 車の一覧
+	 * @param maker 絞り込みたい車のメーカー
+	 * @return 絞り込んだメーカーの車の一覧を返す。0件の場合は空のListを返す
 	 */
 	public List<Car> filterByMaker(List<Car> cars, CarMaker maker) {
-		return null;
+		List<Car> filteredCars = new ArrayList<Car>();
+		for (Car car : cars ) {
+			if (car.getMaker() == maker) {
+				filteredCars.add(car);
+			}
+		}
+		return filteredCars;
+	}
+	
+
+	/**
+	 * 車の情報を更新するメソッド。
+	 * 現段階では走行距離の更新のみを行う。
+	 * @param cars 車の一覧
+	 * @param carId 更新したい車のID
+	 * @param mileage 更新後の走行距離
+	 * @return　carIdが存在する車のIDで更新に成功した場合はtrue、存在せず、更新に失敗する場合はfalse
+	 */
+	public boolean updateCar(List<Car> cars, int carId, int mileage) {
+		Car car = findCarById(cars, carId);
+		if (car != null) {
+			car.setCumulativeMileage(mileage);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * 車の情報を更新するメソッド
-	 * @param cars
-	 * @param carId
+	 * 車の状態を見て、貸出中の場合はfalse、貸出中でない場合はtrueを返して、車の情報を消しても良いか判断するメソッド
+	 * @param car 消したい車
+	 * @return CarStatus.RENTEDの場合はfalse、RENTEDではない場合はtrue
 	 */
-	public void updateCar(List<Car> cars, int carId) {
-		
+	public boolean canDeleteCar(Car car) {
+		if (car.getStatus() == CarStatus.RENTED) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**
 	 * 車の情報を削除するメソッド
-	 * @param cars
-	 * @param carId
+	 * @param cars 車の一覧
+	 * @param carId 削除したい車のID
+	 * @return carIdがcarsに存在する車のIDかつStatusが貸出中ではない場合は削除してtrue、carIdが存在しないまたはStatusが貸出中の場合はfalse
 	 */
-	public void deleteCar(List<Car> cars, int carId) {
-		
+	public boolean deleteCar(List<Car> cars, int carId) {
+		Car car = findCarById(cars, carId);
+		if (car != null && canDeleteCar(car)) {
+			cars.remove(car);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -140,5 +181,23 @@ public class CarService{
 			throw new IOException("CSVへの書き込み保存に失敗しました", e);
 		}
 	}
+	
+	/**
+	 * 車のIDでその車の情報を取得するメソッド
+	 * @param cars 車の一覧
+	 * @param id 調べたい車のID
+	 * @return 存在するIDの場合はその車のオブジェクトを返す、存在しない場合はnullで返す。
+	 */
+	public Car findCarById(List<Car> cars, int id) {
+		for (Car car : cars) {
+			if (car.getId() == id) {
+				return car;
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	
 }
