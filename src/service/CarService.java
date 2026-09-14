@@ -269,4 +269,36 @@ public class CarService{
 		return false;
 	}
 	
+	/**
+	 * 返却をできるか判断するメソッド
+	 * @param car 返却したい車
+	 * @param userId 返却したいユーザーのID
+	 * @return 車の状態が貸出中かつ車を借りているユーザーのIDとuserIdが一致した場合はtrue, そうでない場合はfalseを返す
+	 */
+	public boolean canReturnCar(Car car, int userId) {
+		if (car.getCurrentUserId() != null && car.getStatus() == CarStatus.RENTED && car.getCurrentUserId() == userId) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 車の返却を行うメソッド
+	 * @param cars 車一覧
+	 * @param carId 返却したい車のID
+	 * @param userId 返却するユーザーのID
+	 * @return 返却可能であれば、車のStatusを貸出可能、借りているユーザーのID部分をnullに更新しtrue、そうでない場合はfalseを返す
+	 */
+	public boolean returnCar(List<Car> cars, int carId, int userId) {
+		Car car = findCarById(cars, carId);
+		if (car != null && canReturnCar(car, userId)) {
+			car.setStatus(CarStatus.AVAILABLE);
+			car.setCurrentUserId(null);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
 }
