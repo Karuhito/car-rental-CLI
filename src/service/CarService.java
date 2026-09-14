@@ -13,6 +13,7 @@ import model.Car;
 import model.CarMaker;
 import model.CarStatus;
 import model.CarTransmission;
+import model.User;
 
 public class CarService{
 	private static final String CARS_CSV = "data/cars.csv";
@@ -197,6 +198,106 @@ public class CarService{
 		return null;
 	}
 	
+	/**
+	 * ユーザーの年齢が18歳以上かを判定するメソッド
+	 * @param user 判定するユーザーのオブジェクト
+	 * @return ユーザーの年齢が18歳未満の場合はfalse、18歳以上の場合はtrueを返す
+	 */
+	public boolean isAdult(User user) {
+		if (user.getAge() < 18) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * AT限定免許でMT車をレンタルしようとしていないかを判定するメソッド
+	 * @param user 判定するユーザー
+	 * @param car ユーザーが借りようとしている車
+	 * @return AT限定免許でMT車を借りようとしていた場合はfalse, そうでない場合はtrueを返す
+	 */
+	public boolean canOperateTransmission(User user, Car car) {
+		if (user.isATLimited() && car.getTransmission() == CarTransmission.MT) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * そのユーザーがすでに別の車を借りていないかを判定するメソッド
+	 * @param cars 車一覧
+	 * @param userId 調べたいユーザーのID
+	 * @return すでに借りている車が存在する場合はfalse, 借りていない場合はtrueを返す
+	 */
+	public boolean isAlreadyRenting(List<Car> cars, int userId) {
+		for (Car car : cars) {
+			if (car.getCurrentUserId() != null && car.getCurrentUserId() == userId) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * レンタル可能かを判定するメソッド
+	 * @param cars 車一覧
+	 * @param user 車をレンタルするユーザー
+	 * @param car レンタルしたい車
+	 * @return ユーザーが18以上かつトランスミッションも問題がないかつすでに借りている車がなく、借りたい車が貸出可能の状態の場合はtrue(貸出OK)、そうでない場合はfalseを返す
+	 */
+	public boolean canRentCar(List<Car> cars, User user, Car car) {
+		if (isAdult(user) && canOperateTransmission(user, car) && !isAlreadyRenting(cars, user.getId()) && car.getStatus() == CarStatus.AVAILABLE) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 車をレンタルするメソッド
+	 * @param cars 車一覧
+	 * @param user 借りるユーザー
+	 * @param carId 借りる車のID
+	 * @return レンタル可能の場合はStatusとCurrentUserIdをセットしてtrue返す、そうでない場合はfalseを返す
+	 */
+	public boolean rentCar(List<Car> cars, User user, int carId) {
+		Car car = findCarById(cars, carId);
+		if (car != null && canRentCar(cars, user, car)) {
+			car.setStatus(CarStatus.RENTED);
+			car.setCurrentUserId(user.getId());
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 返却をできるか判断するメソッド
+	 * @param car 返却したい車
+	 * @param userId 返却したいユーザーのID
+	 * @return 車の状態が貸出中かつ車を借りているユーザーのIDとuserIdが一致した場合はtrue, そうでない場合はfalseを返す
+	 */
+	public boolean canReturnCar(Car car, int userId) {
+		if (car.getCurrentUserId() != null && car.getStatus() == CarStatus.RENTED && car.getCurrentUserId() == userId) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 車の返却を行うメソッド
+	 * @param cars 車一覧
+	 * @param carId 返却したい車のID
+	 * @param userId 返却するユーザーのID
+	 * @return 返却可能であれば、車のStatusを貸出可能、借りているユーザーのID部分をnullに更新しtrue、そうでない場合はfalseを返す
+	 */
+	public boolean returnCar(List<Car> cars, int carId, int userId) {
+		Car car = findCarById(cars, carId);
+		if (car != null && canReturnCar(car, userId)) {
+			car.setStatus(CarStatus.AVAILABLE);
+			car.setCurrentUserId(null);
+			return true;
+		}
+		return false;
+	}
 	
 	
 	
