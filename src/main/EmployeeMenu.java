@@ -85,11 +85,18 @@ public class EmployeeMenu {
             if (carId == 0) {
               break;
             }
-            int additionalMilage = inputUtil.readInt("走行距離を入力してください");
-            if (additionalMilage == 0) {
+            int mileage = inputUtil.readInt("走行距離を入力してください");
+            if (mileage == 0) {
               break;
             }
-            if (carService.updateCar(cars, carId, additionalMilage)) {
+            CarStatus status = selectCarStatus(
+                "更新後の車の状態を選択してください(0で戻る)\n1:" + CarStatus.AVAILABLE.getLabel() + "\n2:"
+                    + CarStatus.RENTED.getLabel() + "\n3:" + CarStatus.MAINTENANCE.getLabel());
+            if (status == null) {
+              break;
+            }
+            if (carService.updateCarMileage(cars, carId, mileage)
+                && carService.updateCarStatus(cars, carId, status)) {
               System.out.println("車の情報を更新しました");
             } else {
               System.out.println("車のIDが見つかりませんでした");
@@ -234,12 +241,11 @@ public class EmployeeMenu {
   /**
    * 車の状態を番号で選択させるメソッド
    * 
+   * @param prompt 選択を求めるときに出力するメッセージ
    * @return 1~3の入力がされた場合は番号に応じて状態を返す、0が入力された場合はnullを返す
    */
-  private CarStatus selectCarStatus() {
-    int statusChoice = inputUtil
-        .readIntInRange("絞り込みたい車の状態を選択してください(0で戻る)\n1:" + CarStatus.AVAILABLE.getLabel() + "\n2:"
-            + CarStatus.RENTED.getLabel() + "\n3:" + CarStatus.MAINTENANCE.getLabel(), 0, 3);
+  private CarStatus selectCarStatus(String prompt) {
+    int statusChoice = inputUtil.readIntInRange(prompt, 0, 3);
     CarStatus status;
     if (statusChoice == 1) {
       status = CarStatus.AVAILABLE;
@@ -312,7 +318,9 @@ public class EmployeeMenu {
       } else if (listChoice == 3) {
         System.out.println("車の状態で絞り込んで表示");
         while (true) {
-          CarStatus status = selectCarStatus();
+          CarStatus status = selectCarStatus(
+              "絞り込みたい車の状態を選択してください(0で戻る)\n1:" + CarStatus.AVAILABLE.getLabel() + "\n2:"
+                  + CarStatus.RENTED.getLabel() + "\n3:" + CarStatus.MAINTENANCE.getLabel());
           if (status == null) {
             break;
           }
