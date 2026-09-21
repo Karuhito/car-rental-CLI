@@ -15,10 +15,13 @@ public class Menu {
   }
 
 
+  /**
+   * トップメニューを表示するメソッド choiceに入る数値によって利用者メニュー、従業員メニュー、終了の3つの処理を行う。
+   */
   public void start() {
     while (true) {
-      //
-      int choice = inputUtil.readIntInRange("1: 利用者メニュー\n2: 業者用メニュー\n0: 終了\n選択してください: ", 0, 2);
+
+      int choice = inputUtil.readIntInRange("1: 利用者メニュー\n2: 従業員メニュー\n0: 終了\n選択してください: ", 0, 2);
 
       // 入力された番号に応じて処理を記述
       if (choice == 1) {

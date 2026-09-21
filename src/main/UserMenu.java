@@ -25,9 +25,14 @@ public class UserMenu {
   }
 
   /**
-   * 
+   * 利用者メニューを出力するメソッド 1. レンタル可能な車一覧を表示 2. 自分のユーザー情報を確認する 3. 車をレンタルする 4. 車を返却する 5. 新規ユーザー登録 6.
+   * ユーザー情報の更新
    */
   public void start() {
+    // 改行
+    System.out.println();
+
+    System.out.println("利用者メニュー");
     while (true) {
       int choice = inputUtil.readIntInRange(
           "1: レンタル可能な車一覧を表示\n2: 自分のユーザー情報を確認する\n3: 車をレンタルする\n4: 車を返却する\n5: 新規ユーザー登録\n6: ユーザー情報の更新\n0: トップメニューに戻る",

@@ -35,7 +35,7 @@ public class EmployeeMenu {
   public void start() {
     if (login()) {
       System.out.println();
-      System.out.println("管理者画面へ入りました");
+      System.out.println("従業員メニュー");
       while (true) {
         int choice = inputUtil.readIntInRange(
             "1:車の新規登録\n2:レンタカー一覧・検索\n3: 車の情報更新\n4:車のデータ削除\n5:ユーザー一覧表示\n6:ユーザーデータ削除\n0:トップメニューに戻る",
