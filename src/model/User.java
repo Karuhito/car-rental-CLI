@@ -1,46 +1,51 @@
 package model;
 
 public class User {
-	private int id;
-	private String name;
-	private int age;
-	private boolean isATLimited;
-	
-	public User(int id, String name, int age, boolean isATLimited) {
-		this.id = id;
-		this.name = name;
-		this.age = age;
-		this.isATLimited = isATLimited;
-	}
+  private int id;
+  private String name;
+  private int age;
+  private boolean isATLimited;
 
-	public String getName() {
-		return name;
-	}
+  /**
+   * コンストラクタ
+   * 
+   * @param id ユーザーのID
+   * @param name ユーザーの名前
+   * @param age ユーザーの年齢
+   * @param isATLimited true -> AT限定。MTの車は乗れない false -> MTも乗れる
+   */
+  public User(int id, String name, int age, boolean isATLimited) {
+    this.id = id;
+    this.name = name;
+    this.age = age;
+    this.isATLimited = isATLimited;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public int getAge() {
-		return age;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+  public int getAge() {
+    return age;
+  }
 
-	public boolean isATLimited() {
-		return isATLimited;
-	}
+  public void setAge(int age) {
+    this.age = age;
+  }
 
-	public void setATLimited(boolean isATLimited) {
-		this.isATLimited = isATLimited;
-	}
+  public boolean isATLimited() {
+    return isATLimited;
+  }
 
-	public int getId() {
-		return id;
-	}
-	
-	
-	
+  public void setATLimited(boolean isATLimited) {
+    this.isATLimited = isATLimited;
+  }
+
+  public int getId() {
+    return id;
+  }
 }
