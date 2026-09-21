@@ -101,8 +101,3 @@ src/
 ### データ保存方式
 - DBは使用せず、`data/` 配下のCSVファイルでローカルデータ管理を行う（`data/cars.csv`, `data/users.csv`）
 - 起動時にCSV全件を`List`に読み込み、メモリ上で操作 → 更新時にCSVへ書き戻す方式
-- 詳細な設計判断は [docs/memo.md](docs/memo.md) を参照
-
-## 関連ドキュメント
-- [docs/memo.md](docs/memo.md): 実装時の設計判断メモ
-- [docs/slide-outline.md](docs/slide-outline.md): 発表スライド用アウトライン
