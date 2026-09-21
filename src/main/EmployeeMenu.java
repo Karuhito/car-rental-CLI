@@ -34,6 +34,7 @@ public class EmployeeMenu {
    */
   public void start() {
     if (login()) {
+      System.out.println();
       System.out.println("管理者画面へ入りました");
       while (true) {
         int choice = inputUtil.readIntInRange(
@@ -72,7 +73,10 @@ public class EmployeeMenu {
                 CarStatus.AVAILABLE, 0, null, transmission));
             System.out.println("新しい車の情報を登録しました。この車のIDは" + newCarId + "です。");
           }
+          System.out.println();
+
         } else if (choice == 2) {
+          // 一覧表示の中で絞り込みや検索も行っているので別メソッドに処理を記述
           showCarList();
         } else if (choice == 3) {
           System.out.println("車の情報更新(0で戻る)");
@@ -92,6 +96,7 @@ public class EmployeeMenu {
             }
             continue;
           }
+          System.out.println();
 
         } else if (choice == 4) {
           System.out.println("車のデータ削除");
@@ -111,12 +116,16 @@ public class EmployeeMenu {
               continue;
             }
           }
+          System.out.println();
+
         } else if (choice == 5) {
           System.out.println("ユーザー一覧表示");
           System.out.println("ID | 名前 | 年齢 | AT/MT ");
           for (User user : userService.listUsers(users)) {
             showUserInfo(user);
           }
+
+
         } else if (choice == 6) {
           System.out.println("ユーザーデータ削除");
           while (true) {
@@ -138,6 +147,7 @@ public class EmployeeMenu {
         } else {
           break;
         }
+        System.out.println();
       }
     }
 
@@ -278,6 +288,7 @@ public class EmployeeMenu {
         for (Car car : cars) {
           showCarInfo(car);
         }
+        System.out.println();
         continue;
 
       } else if (listChoice == 2) {
@@ -295,6 +306,7 @@ public class EmployeeMenu {
           for (Car car : filteredCars) {
             showCarInfo(car);
           }
+          System.out.println();
         }
 
       } else if (listChoice == 3) {
@@ -310,6 +322,7 @@ public class EmployeeMenu {
           for (Car car : filteredCars) {
             showCarInfo(car);
           }
+          System.out.println();
           continue;
         }
 
@@ -323,10 +336,11 @@ public class EmployeeMenu {
         }
         System.out.println("ID:" + carId + "の車が見つかりました");
         showCarInfo(car);
-
+        System.out.println();
       } else {
         break;
       }
+
     }
   }
 }

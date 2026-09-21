@@ -8,14 +8,12 @@ import service.CarService;
 import service.UserService;
 import util.InputUtil;
 
-
 public class UserMenu {
   private InputUtil inputUtil;
   private UserService userService;
   private CarService carService;
   private List<User> users;
   private List<Car> cars;
-
 
   public UserMenu(InputUtil inputUtil, UserService userService, CarService carService,
       List<User> users, List<Car> cars) {
@@ -34,17 +32,18 @@ public class UserMenu {
       int choice = inputUtil.readIntInRange(
           "1: レンタル可能な車一覧を表示\n2: 自分のユーザー情報を確認する\n3: 車をレンタルする\n4: 車を返却する\n5: 新規ユーザー登録\n6: ユーザー情報の更新\n0: トップメニューに戻る",
           0, 6);
+      System.out.println();
 
-      // 一覧
       if (choice == 1) {
         List<Car> availableCars = carService.filterByStatus(cars, CarStatus.AVAILABLE);
         System.out.println("レンタルできる車一覧");
         System.out.println("ID | 車種 | 色 | メーカー | トランスミッション");
         for (Car car : availableCars) {
-          System.out.println(car.getId() + "|" + car.getVehicleModel() + "|" + car.getColor() + "|"
-              + car.getMaker().getLabel() + "|" + car.getTransmission().getLabel());
+          System.out.println(car.getId() + " | " + car.getVehicleModel() + " | " + car.getColor()
+              + " | " + car.getMaker().getLabel() + " | " + car.getTransmission().getLabel());
         }
-        // 自分のユーザーデータを確認
+        System.out.println();
+
       } else if (choice == 2) {
         System.out.println("自分のユーザー情報を調べる");
         while (true) {
@@ -57,15 +56,16 @@ public class UserMenu {
             System.out.println("ユーザー情報を取得できませんでした。");
             continue;
           }
-          String atLimited = "AT限定";
+          String atLimited = "AT車のみレンタル可能";
           if (!myUserData.isATLimited()) {
-            atLimited = "MT解放済み";
+            atLimited = "MT車もレンタル可能";
           }
           System.out.println("あなたのユーザーデータ");
           System.out.println("ID: " + myUserData.getId() + "名前: " + myUserData.getName() + "年齢: "
               + myUserData.getAge() + "MT解放状況: " + atLimited);
         }
-        // 車を借りる
+        System.out.println();
+
       } else if (choice == 3) {
         System.out.println("車を借りる");
         while (true) {
@@ -120,6 +120,7 @@ public class UserMenu {
           userService.addUser(users, new User(newUserId, newUserName, newUserAge, choiceToBoolean(
               inputUtil.readIntInRange("免許がAT限定の場合は1、マニュアル免許の場合は2を入力してください;", 1, 2))));
           System.out.println("ユーザー登録が完了しました。あなたのユーザーIDは" + newUserId + "です。");
+          break;
         }
         // ユーザー更新。更新パターンが複数あるのでServiceにメソッドを用意するのではなく、UserMenu側でsetterを使用して更新する形にする。
       } else if (choice == 6) {
