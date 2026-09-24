@@ -310,7 +310,7 @@ public class CarService {
    * @param cars 車一覧
    * @param user 車をレンタルするユーザー
    * @param car レンタルしたい車
-   * @return ユーザーが18以上かつトランスミッションも問題がないかつすでに借りている車がなく、借りたい車が貸出可能の状態の場合はtrue(貸出OK)、そうでない場合はfalseを返す
+   * @return ユーザーの年齢が18歳以上、トランスミッション方式も問題がない、すでに借りている車がない、借りたい車の状態が貸出可能の場合はtrue、そうでない場合はfalseを返す
    */
   public boolean canRentCar(List<Car> cars, User user, Car car) {
     if (isAdult(user) && canOperateTransmission(user, car) && !isAlreadyRenting(cars, user.getId())
