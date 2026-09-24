@@ -141,9 +141,9 @@ public class UserMenu {
             break;
           }
           User user = userService.findUserById(users, userId);
-          // ユーザーIDが見つからなかった時
+          // ユーザーが見つからなかった時
           if (user == null) {
-            System.out.println("ユーザーIDが見つかりませんでした");
+            System.out.println("ユーザーIDと一致するユーザーが見つかりませんでした");
             continue;
           }
           // 名前の更新 isBlankで入力が空でない時のみsetterで名前を更新する
