@@ -246,6 +246,22 @@ public class CarService {
   }
 
   /**
+   * ユーザーIDから借りている車の情報を取得するメソッド
+   * 
+   * @param cars 車の一覧
+   * @param userId 調べたいユーザーのID
+   * @return 車を借りているユーザーIDと調べたいユーザーのIDが一致すればその車を返す、存在しない場合はnullを返す、
+   */
+  public Car findCarByUserId(List<Car> cars, int userId) {
+    for (Car car : cars) {
+      if (car.getCurrentUserId() != null && car.getCurrentUserId() == userId) {
+        return car;
+      }
+    }
+    return null;
+  }
+
+  /**
    * ユーザーの年齢が18歳以上かを判定するメソッド
    * 
    * @param user 判定するユーザーのオブジェクト
