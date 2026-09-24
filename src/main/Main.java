@@ -43,6 +43,7 @@ public class Main {
         System.out.println("データの保存に失敗しました");
       }
     } finally {
+      // 必ずScannerはcloseさせる
       inputUtil.close();
     }
   }
