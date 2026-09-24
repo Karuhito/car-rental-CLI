@@ -141,3 +141,36 @@ car-rental-CLI/
 ### データ保存方式
 - DBは使用せず、`data/` 配下のCSVファイルでローカルデータ管理を行う（`data/cars.csv`, `data/users.csv`）
 - 起動時にCSV全件を`List`に読み込み、メモリ上で操作 → 更新時にCSVへ書き戻す方式
+
+## CRUDと主要機能の処理説明
+
+### CarService
+
+| メソッド | 役割 |
+|---|---|
+| generateNextCarId | 新規登録時のID採番（既存IDの最大値+1） |
+| addCar | 車の新規登録 (C) |
+| listCars | 車の一覧を取得 (R) |
+| findCarById | IDから該当の車を検索 |
+| findCarByUserId | ユーザーIDから、そのユーザーが現在借りている車を検索（`currentUserId`による逆引き） |
+| filterByStatus | 車の状態で絞り込んで一覧を取得 |
+| filterByMaker | メーカーで絞り込んで車の一覧を取得 |
+| updateCarMileage | 走行距離の更新 (U) |
+| updateCarStatus | 車の状態（点検中など）の更新 (U) |
+| canDeleteCar / deleteCar | 削除可否チェック（貸出中は不可）と削除 (D) |
+| isAdult / canOperateTransmission / isAlreadyRenting / canRentCar | 貸出可否のチェック（未成年・免許・二重貸出） |
+| rentCar | 貸出処理（チェックを通した上で`currentUserId`と`status`を更新） |
+| canReturnCar / returnCar | 返却可否チェック（借りた本人か）と返却処理 |
+| loadFromCsv / saveToCsv | `data/cars.csv`の読み込み・書き込み |
+
+### UserService
+
+| メソッド | 役割 |
+|---|---|
+| findUserById | IDから該当ユーザーを検索 |
+| findUserByName | 名前からユーザーを検索（IDを忘れた場合の救済策） |
+| generateNextUserId | 新規登録時のID採番（既存IDの最大値+1） |
+| addUser | ユーザー新規登録 (C) |
+| listUsers | ユーザーの一覧を取得 (R) |
+| canDeleteUser / deleteUser | 削除可否チェック（車を借りていないか）と削除 (D) |
+| loadFromCsv / saveToCsv | `data/users.csv`の読み込み・書き込み |
