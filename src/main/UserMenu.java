@@ -2,6 +2,7 @@ package main;
 
 import java.util.List;
 import model.Car;
+import model.CarMaker;
 import model.CarStatus;
 import model.User;
 import service.CarService;
@@ -40,13 +41,7 @@ public class UserMenu {
       System.out.println();
 
       if (choice == 1) {
-        List<Car> availableCars = carService.filterByStatus(cars, CarStatus.AVAILABLE);
-        System.out.println("レンタルできる車一覧");
-        System.out.println("ID | 車種 | 色 | メーカー | トランスミッション");
-        for (Car car : availableCars) {
-          System.out.println(car.getId() + " | " + car.getVehicleModel() + " | " + car.getColor()
-              + " | " + car.getMaker().getLabel() + " | " + car.getTransmission().getLabel());
-        }
+        showCarList();
         System.out.println();
 
       } else if (choice == 2) {
@@ -58,16 +53,25 @@ public class UserMenu {
           }
           User myUserData = userService.findUserByName(users, userName);
           if (myUserData == null) {
-            System.out.println("ユーザー情報を取得できませんでした。");
+            System.out.println("名前と一致するユーザー情報を取得できませんでした。");
             continue;
           }
           String atLimited = "AT車のみレンタル可能";
           if (!myUserData.isATLimited()) {
             atLimited = "MT車もレンタル可能";
           }
+          Car currentRentalCar = carService.findCarByUserId(cars, myUserData.getId());
+          // デフォルトでは借りている車はないと表示
+          String currentRental = "現在あなたがレンタルしている車はありません";
+          // 借りている車が存在する場合は借りている車のIDを表示
+          if (currentRentalCar != null) {
+            currentRental = "現在あなたが借りている車のIDは" + currentRentalCar.getId() + "です";
+          }
+
           System.out.println("あなたのユーザーデータ");
-          System.out.println("ID: " + myUserData.getId() + "名前: " + myUserData.getName() + "年齢: "
-              + myUserData.getAge() + "MT解放状況: " + atLimited);
+          System.out.println("ID: " + myUserData.getId() + " 名前: " + myUserData.getName() + " 年齢: "
+              + myUserData.getAge() + " MT解放状況: " + atLimited);
+          System.out.println(currentRental);
         }
         System.out.println();
 
@@ -127,6 +131,7 @@ public class UserMenu {
           System.out.println("ユーザー登録が完了しました。あなたのユーザーIDは" + newUserId + "です。");
           break;
         }
+        System.out.println();
         // ユーザー更新。更新パターンが複数あるのでServiceにメソッドを用意するのではなく、UserMenu側でsetterを使用して更新する形にする。
       } else if (choice == 6) {
         System.out.println("ユーザー情報更新");
@@ -185,5 +190,89 @@ public class UserMenu {
       return true;
     }
     return false;
+  }
+
+
+  /**
+   * レンタル可能な車一覧を押した時、全て表示かメーカーによって絞り込むかを選択させ、全て表示の場合はそのまま表示、メーカー絞り込みの場合はメーカー選択・絞り込みも行って一覧を表示させるメソッド
+   */
+  private void showCarList() {
+    List<Car> availableCars = carService.filterByStatus(cars, CarStatus.AVAILABLE);
+    System.out.println("レンタル可能な車一覧を表示(0でもどる)");
+    while (true) {
+      int listChoice =
+          inputUtil.readIntInRange("表示形式を選択してください\n1: レンタル可能な車を全て表示\n2: メーカーで絞り込んで表示", 0, 2);
+
+      if (listChoice == 1) {
+        System.out.println("レンタル可能な車を全て表示");
+        System.out.println(availableCars.size() + "件の車が見つかりました");
+        System.out.println("ID | 車種名 | 色 | メーカー | 累計走行距離 | トランスミッション方式");
+        for (Car car : availableCars) {
+          showCarInfo(car);
+        }
+        System.out.println();
+        continue;
+      } else if (listChoice == 2) {
+        System.out.println("レンタル可能な車をメーカーで絞り込んで表示");
+        while (true) {
+          CarMaker carMaker = selectCarMaker();
+          if (carMaker == null) {
+            break;
+          }
+          List<Car> filteredCars = carService.filterByMaker(availableCars, carMaker);
+          // 絞り込んだ結果0件だった時
+          if (filteredCars.isEmpty()) {
+            System.out.println(carMaker.getLabel() + "の車は見つかりませんでした");
+            continue;
+          }
+          System.out.println(filteredCars.size() + "件の車が見つかりました");
+          System.out.println("ID | 車種名 | 色 | メーカー | 累計走行距離 | トランスミッション方式");
+          for (Car car : filteredCars) {
+            showCarInfo(car);
+          }
+          continue;
+        }
+      } else {
+        break;
+      }
+    }
+  }
+
+  /**
+   * 車の情報を出力するメソッド EmployeeMenuにも同様のメソッドがあるが、こちらは現在借りているユーザーと状態は表示しない。
+   * 
+   * @param car 情報を出力させたい車のオブジェクト
+   */
+  private void showCarInfo(Car car) {
+    System.out.println(car.getId() + " | " + car.getVehicleModel() + " | " + car.getColor() + " | "
+        + car.getMaker().getLabel() + " | " + car.getCumulativeMileage() + " | "
+        + car.getTransmission().getLabel());
+  }
+
+  /**
+   * メーカーを選択させるときに使用するメソッド
+   * 
+   * @return 番号の入力に応じて返り値に入れるメーカーを切り替える。0が入力されたときはnullを返す
+   */
+  private CarMaker selectCarMaker() {
+    CarMaker maker;
+    int makerChoice =
+        inputUtil.readIntInRange("絞り込みたい車のメーカーを選択してください\n1:" + CarMaker.TOYOTA.getLabel() + "\n2:"
+            + CarMaker.NISSAN.getLabel() + "\n3:" + CarMaker.HONDA.getLabel() + "\n4:"
+            + CarMaker.SUBARU.getLabel() + "\n5:" + CarMaker.OTHER.getLabel(), 0, 5);
+    if (makerChoice == 1) {
+      maker = CarMaker.TOYOTA;
+    } else if (makerChoice == 2) {
+      maker = CarMaker.NISSAN;
+    } else if (makerChoice == 3) {
+      maker = CarMaker.HONDA;
+    } else if (makerChoice == 4) {
+      maker = CarMaker.SUBARU;
+    } else if (makerChoice == 5) {
+      maker = CarMaker.OTHER;
+    } else {
+      return null;
+    }
+    return maker;
   }
 }
