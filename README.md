@@ -73,26 +73,31 @@
 ## クラス構成（パッケージ構成）
 
 ```
-src/
-├── main/                   <-- 画面（CLI）とプログラムの起動を担当
-│   ├── Main.java           // プログラムの起動（エントリーポイント）
-│   ├── Menu.java           // トップメニューの画面制御
-│   ├── EmployeeMenu.java   // 業者メニューの画面制御（固定パスワードによるアクセス制御）
-│   └── UserMenu.java       // 利用者メニューの画面制御
+car-rental-CLI/
+├── data/                   <-- 永続化データ（CSVファイル）
+│   ├── cars.csv
+│   └── users.csv
 │
-├── model/                  <-- データの入れ物（状態・情報の保持）を担当
-│   ├── Car.java            // 車クラス
-│   ├── User.java           // 利用者（顧客）クラス
-│   ├── CarStatus.java      // 車の状態を定義するENUM（待機中、貸出中、点検中）
-│   ├── CarTransmission.java// 車がATなのかMTなのかを定義するENUM（AT, MT）
-│   └── CarMaker.java       // 車のメーカーを定義するENUM（トヨタ、日産、ホンダ、スバル、その他）
-│
-├── service/                <-- データの加工や業務ルール（ロジック）を担当
-│   ├── CarService.java     // 車のCRUD、および「貸出（年齢・免許チェック）/返却」の実行
-│   └── UserService.java    // 利用者の登録、一覧表示、更新、削除の管理
-│
-└── util/                   <-- 共通で使う便利な補助機能を担当
-    └── InputUtil.java      // キーボード入力（Scanner）の受付、数値・文字チェック
+└── src/
+    ├── main/                   <-- 画面（CLI）とプログラムの起動を担当
+    │   ├── Main.java           // プログラムの起動（エントリーポイント）
+    │   ├── Menu.java           // トップメニューの画面制御
+    │   ├── EmployeeMenu.java   // 業者メニューの画面制御（固定パスワードによるアクセス制御）
+    │   └── UserMenu.java       // 利用者メニューの画面制御
+    │
+    ├── model/                  <-- データの入れ物（状態・情報の保持）を担当
+    │   ├── Car.java            // 車クラス
+    │   ├── User.java           // 利用者（顧客）クラス
+    │   ├── CarStatus.java      // 車の状態を定義するENUM（待機中、貸出中、点検中）
+    │   ├── CarTransmission.java// 車がATなのかMTなのかを定義するENUM（AT, MT）
+    │   └── CarMaker.java       // 車のメーカーを定義するENUM（トヨタ、日産、ホンダ、スバル、その他）
+    │
+    ├── service/                <-- データの加工や業務ルール（ロジック）を担当
+    │   ├── CarService.java     // 車のCRUD、および「貸出（年齢・免許チェック）/返却」の実行
+    │   └── UserService.java    // 利用者の登録、一覧表示、更新、削除の管理
+    │
+    └── util/                   <-- 共通で使う便利な補助機能を担当
+        └── InputUtil.java      // キーボード入力（Scanner）の受付、数値・文字チェック
 ```
 
 ## 各クラスの役割
